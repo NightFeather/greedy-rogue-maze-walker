@@ -33,9 +33,9 @@ int move(Path* path, int direction) {
   Coord next_pos;
 
 /*
- *764
- *5 2
- *310
+ *753
+ *6 2
+ *410
  */
 
   maze_unit = &maze->map[pos.x][pos.y];
@@ -55,21 +55,21 @@ int move(Path* path, int direction) {
       break;
     case 3:
       if(maze_unit->mode != 2){return -1;}
-      next_pos.x = pos.x-1;
-      next_pos.y = pos.y+1;
-      break;
-    case 4:
-      if(maze_unit->mode != 2){return -1;}
       next_pos.x = pos.x+1;
       next_pos.y = pos.y-1;
       break;
-    case 5:
+    case 4:
+      if(maze_unit->mode != 2){return -1;}
       next_pos.x = pos.x-1;
-      next_pos.y = pos.y;
+      next_pos.y = pos.y+1;
       break;
-    case 6:
+    case 5:
       next_pos.x = pos.x;
       next_pos.y = pos.y-1;
+      break;
+    case 6:
+      next_pos.x = pos.x-1;
+      next_pos.y = pos.y;
       break;
     case 7:
       if(maze_unit->mode != 2){return -1;}
