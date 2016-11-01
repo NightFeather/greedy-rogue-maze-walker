@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <time.h>   //struct timespec, timespec_get
+#include <math.h>   //abs
 #include "maze.h"
 
 void rand_setup(){

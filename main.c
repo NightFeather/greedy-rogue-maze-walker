@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <math.h>
+#include <unistd.h> //usleeep, random, srandom
 #include "maze.h"
 #include "path.h"
 
@@ -11,7 +9,7 @@ int main(void){
   Path* path;
   int status = 0;
   int rb_status = 0;
-  maze = create_map(15,15);
+  maze = create_map(25,25);
   path = init_path(maze);
   printf("size: %d, %d\n", maze->xsize, maze->ysize);
   while(1){
