@@ -21,8 +21,13 @@ int main(void){
     if(status == 1) break; // done!
     if(status == -1) rb_status = rollback(path);
     if(rb_status == -1) break;
+    usleep(100000);
+    printf("\e[H\e[2J");
   }
+  printf("\e[H\e[2J");
   show_map(maze,2);
+  if(rb_status == -1) printf("No route to goal.\n");
+  if(status == 1) printf("Goal!!\n");
   delete_map(maze);
   destroy_path(path);
   free(maze);

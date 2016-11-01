@@ -47,12 +47,13 @@ Maze* create_map( int xsize, int ysize ){
 
 int show_map( Maze* base, int type){
   if(base->map == NULL) return 1;
-  for(int i = 0; i < base->xsize;putchar('\n'), ++i) {
-    for (int j = 0; j < base->ysize; putchar(' '), ++j) {
+  for(int j = 0; j < base->ysize;putchar('\n'), ++j) {
+    for (int i = 0; i < base->xsize; putchar(' '), ++i) {
       MazeUnit node = base->map[i][j];
-      if(node.state == 1) printf("\e[1;33m");
-      if(node.state == 2) printf("\e[1;31m");
-      if(node.state == 3) printf("\e[1;35m");
+      if(node.state == 1) printf("\e[1;33m"); //stepped
+      if(node.state == 2) printf("\e[1;31m"); //dead end
+      if(node.state == 3) printf("\e[1;35m"); //current
+      if(node.mode  == 1) printf("\e[1;34m"); //wall
       switch(type){
         case 0:
           printf("%d", node.mode);
