@@ -21,55 +21,86 @@ Path* init_path(Maze* maze){
   path->maze    = maze;
   path->start   = start;
   path->current = start;
+  path->length  = 0;
 
   return path;
 
 }
 
-int move(Path* path, int direction) {
+int move(Path* path, int priority) {
+
   Maze* maze = path->maze;
   MazeUnit *maze_unit, *maze_unit_nxt;
   Coord pos = path->current->pos;
   Coord next_pos;
 
 /*
- *753
- *6 2
- *410
+ *  when pos.x > pos.y
+ *  7 6 4
+ *  5   2
+ *  3 1 0
+ *
+ *  when pos.x < pos.y
+ *  7 5 3
+ *  6   1
+ *  4 2 0
  */
 
+  int remap_ur[8] = {5,2,1,6,4,3,0,7};
+  int remap_dl[8] = {5,1,2,4,6,0,3,7};
+  int direction = -1;
+
   maze_unit = &maze->map[pos.x][pos.y];
-  switch(direction){ // 0: down_right, 1: down, 2: right, 3: down_left, 4: right_up, 5: left, 6: up, 7: up_left
+
+  if(pos.x > pos.y){
+    direction = remap_ur[priority];
+  } else {
+    direction = remap_dl[priority];
+  }
+
+/*
+ * direction:
+ *  0: up
+ *  1: right
+ *  2: down
+ *  3: left
+ *  4: up right
+ *  5: down right
+ *  6: down left
+ *  7: up left
+ */
+
+  switch(direction){
     case 0:
-      if(maze_unit->mode != 2){return -1;}
-      next_pos.x = pos.x+1;
-      next_pos.y = pos.y+1;
+      next_pos.x = pos.x;
+      next_pos.y = pos.y-1;
       break;
     case 1:
-      next_pos.x = pos.x;
-      next_pos.y = pos.y+1;
-      break;
-    case 2:
       next_pos.x = pos.x+1;
       next_pos.y = pos.y;
       break;
+    case 2:
+      next_pos.x = pos.x;
+      next_pos.y = pos.y+1;
+      break;
     case 3:
-      if(maze_unit->mode != 2){return -1;}
-      next_pos.x = pos.x+1;
-      next_pos.y = pos.y-1;
+      next_pos.x = pos.x-1;
+      next_pos.y = pos.y;
       break;
     case 4:
       if(maze_unit->mode != 2){return -1;}
-      next_pos.x = pos.x-1;
-      next_pos.y = pos.y+1;
-      break;
-    case 5:
-      next_pos.x = pos.x;
+      next_pos.x = pos.x+1;
       next_pos.y = pos.y-1;
       break;
+    case 5:
+      if(maze_unit->mode != 2){return -1;}
+      next_pos.x = pos.x+1;
+      next_pos.y = pos.y+1;
+      break;
     case 6:
+      if(maze_unit->mode != 2){return -1;}
       next_pos.x = pos.x-1;
-      next_pos.y = pos.y;
+      next_pos.y = pos.y+1;
       break;
     case 7:
       if(maze_unit->mode != 2){return -1;}
@@ -104,7 +135,8 @@ int move(Path* path, int direction) {
 int next(Path* path) {
   int i =0;
   int status = 0;
-  while(((status = move(path, i)) == -1) && (i < 8) ){ ++i; }
+
+  while( (i < 8) && ((status = move(path, i)) == -1)){ ++i; }
   if(path->current->pos.x == path->maze->xsize-2 &&
     path->current->pos.y == path->maze->ysize-2 ) return 1;
   if(status == -1 && i == 8) return -1; // seems no way to go
