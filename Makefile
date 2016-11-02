@@ -1,14 +1,15 @@
 CC=gcc
 OBJS=maze.o path.o
+CFLAGS=-g
 
 
 default: main
 
 main: $(OBJS)
-	$(CC) -g main.c $(OBJS) -o main
+	$(CC) $(CFLAGS) main.c $(OBJS) -o main
 
 $(OBJS): %.o: %.c
-	$(CC) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm main $(OBJS)
