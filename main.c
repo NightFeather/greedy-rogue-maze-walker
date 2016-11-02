@@ -15,6 +15,7 @@ int main(void){
   while(1){
     show_map(maze,2);
     printf("current: %d, %d\n", path->current->pos.x,path->current->pos.y);
+    printf("length: %d steps\n", path->length);
     status = next(path);
     if(status == 1) break; // done!
     if(status == -1) rb_status = rollback(path);
@@ -24,6 +25,7 @@ int main(void){
   }
   printf("\e[H\e[2J");
   show_map(maze,2);
+  printf("length: %d\n", path->length);
   if(rb_status == -1) printf("No route to goal.\n");
   if(status == 1) printf("Goal!!\n");
   delete_map(maze);

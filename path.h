@@ -18,9 +18,11 @@ struct _path_node
 struct _path
 {
   Maze* maze;
+  int length;
 
   struct _path_node* start;
   struct _path_node* current;
+  struct _path_node* nearest;
 };
 
 typedef struct _path       Path;

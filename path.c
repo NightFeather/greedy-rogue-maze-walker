@@ -93,6 +93,7 @@ int move(Path* path, int direction) {
     path->current = node;
     maze_unit->state = 1;
     maze_unit_nxt->state = 3;
+    path->length += 1;
     return 0;
   } else {
     return -1;
@@ -119,6 +120,7 @@ int rollback(Path* path){
           temp->pos.x, temp->pos.y,
           path->current->pos.x, path->current->pos.y );
   path->maze->map[temp->pos.x][temp->pos.y].state = 2;
+  path->length -= 1;
   free(temp);
   return 0;
 }
