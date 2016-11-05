@@ -4,24 +4,45 @@
 #include "maze.h"
 #include "path.h"
 
-int main(void){
+int main(int argc, char* argv[]){
+
+  if(argc < 3) {
+    printf("Usage: %s width height \n", argv[0]);
+    return -1;
+  }
+
+  int xsize = atoi(argv[1]);
+  int ysize = atoi(argv[2]);
+
+  if(xsize < 3 || ysize < 3){
+    printf("Cannot build maze with any side less than 3!\n");
+    return -2;
+  }
+
   Maze* maze;
   Path* path;
   int status = 0;
   int rb_status = 0;
-  maze = create_map(25,25);
+  maze = create_map(xsize,ysize);
   path = init_path(maze);
   printf("size: %d, %d\n", maze->xsize, maze->ysize);
   while(1){
-    show_map(maze,2);
-    printf("current: %d, %d\n", path->current->pos.x,path->current->pos.y);
-    printf("length: %d steps\n", path->length);
+
+    if(getenv("DEBUG") != NULL) {
+      show_map(maze,2);
+      printf("current: %d, %d\n", path->current->pos.x,path->current->pos.y);
+      printf("length: %d steps\n", path->length);
+    }
+
     status = next(path);
     if(status == 1) break; // done!
     if(status == -1) rb_status = rollback(path);
     if(rb_status == -1) break;
-    usleep(100000);
-    printf("\e[H\e[2J");
+
+    if(getenv("DEBUG") != NULL) {
+      usleep(100000);
+      printf("\e[H\e[2J");
+    }
   }
   printf("\e[H\e[2J");
   show_map(maze,2);

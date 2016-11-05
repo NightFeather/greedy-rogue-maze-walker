@@ -114,7 +114,9 @@ int move(Path* path, int priority) {
   // takeout the info to shorten the next if expression
   maze_unit_nxt = &maze->map[next_pos.x][next_pos.y];
 
-  printf("%d: try move from (%d, %d) to (%d, %d)\n", direction, pos.x, pos.y, next_pos.x, next_pos.y);
+  if(getenv("DEBUG") != NULL) {
+    printf("%d: try move from (%d, %d) to (%d, %d)\n", direction, pos.x, pos.y, next_pos.x, next_pos.y);
+  }
 
   if(maze_unit_nxt->mode != 1 && maze_unit_nxt->state == 0){
     PathNode* node;
@@ -135,8 +137,13 @@ int move(Path* path, int priority) {
 int next(Path* path) {
   int i =0;
   int status = 0;
+  PathNode min;
 
-  while( (i < 8) && ((status = move(path, i)) == -1)){ ++i; }
+  for( i=0; i < 8; ++i){
+    status = move(path, i);
+    if(status != -1) break;
+  }
+
   if(path->current->pos.x == path->maze->xsize-2 &&
     path->current->pos.y == path->maze->ysize-2 ) return 1;
   if(status == -1 && i == 8) return -1; // seems no way to go
@@ -148,9 +155,13 @@ int rollback(Path* path){
   if(path->current == path->start) return -1; //back to start, no way
   temp = path->current;
   path->current = path->current->prev;
-  printf("rollback from (%d, %d) to (%d, %d).\n",
-          temp->pos.x, temp->pos.y,
-          path->current->pos.x, path->current->pos.y );
+
+  if(getenv("DEBUG") != NULL) {
+      printf("rollback from (%d, %d) to (%d, %d).\n",
+            temp->pos.x, temp->pos.y,
+            path->current->pos.x, path->current->pos.y );
+  }
+
   path->maze->map[temp->pos.x][temp->pos.y].state = 2;
   path->length -= 1;
   free(temp);
